@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>User: {{ user.username }}</h1>
+    <hr>
+    {% for bookmark in bookmarks %}
+    <p>
+    {{ bookmark.author.username }} says: <b>{{ bookmark.title }}</b>
+    </p>
+    {% endfor %}
+{% endblock %}

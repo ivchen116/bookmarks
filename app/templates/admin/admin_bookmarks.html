@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% import "_pages.html" as page %}
+
+{% block content %}
+<h3>
+    <i>管理书签 <span class="badge">{{ nums }}</span></i> |
+    <a href="{{ url_for('admin.users') }}">管理用户</a>
+</h3><hr>
+{% if bookmarks %}
+	{% for bookmark in bookmarks %}
+		<div>
+			{% if bookmark.disabled %}
+				<i><font color="#d2691e">此书签已被删除。</font></i><br>
+				{{ bookmark.author.username }} says: <b>{{ bookmark.title }}</b>
+			{% endif %}
+			{% if not bookmark.disabled %}
+				{{ bookmark.author.username }} says: <b>{{ bookmark.title }}</b>
+			{% endif %}
+		</div>
+		<div>
+			<a href="{{ url_for('user.edit', id=bookmark.id) }}">编辑</a>
+			{% if bookmark.disabled %}
+				<a class="btn btn-default btn-xs" href="{{ url_for('admin.recover_bookmark',id=bookmark.id) }}">恢复</a>
+			{% else %}
+				<a class="btn btn-danger btn-xs" href="{{ url_for('admin.delete_bookmark',id=bookmark.id) }}">删除</a>
+			{% endif %}
+		</div><hr>
+	{% endfor %}
+	<div class="pagination">
+	{{ page.pages(pagination, 'admin.bookmarks') }}
+	</div>
+{% endif %}
+{% endblock %}

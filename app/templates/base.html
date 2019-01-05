@@ -1,0 +1,37 @@
+ <html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - 书签</title>
+        {% else %}
+        <title>书签</title>
+        {% endif %}
+    </head>
+    <body>
+		<div>
+		  书签:
+		  <a href="{{ url_for('user.index') }}">首页</a>
+		  {% if current_user.is_anonymous %}
+		  <a href="{{ url_for('user.write') }}">发布</a>
+		  <a href="{{ url_for('auth.login') }}">登录</a>
+		  {% else %}
+			{% if current_user.operation(Permission.ADMINISTER) %}
+				<a href="{{ url_for('admin.index') }}">管理网站</a>
+			{% endif %}
+		  <a href="{{ url_for('user.users', username=current_user.username) }}">个人主页</a>
+		  <a href="{{ url_for('user.write') }}">发布</a>
+		  <a href="{{ url_for('auth.logout') }}">登出</a>
+		  {% endif %}
+		</div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </body>
+</html>

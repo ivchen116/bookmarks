@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% import "_pages.html" as page %}
+
+{% block content %}
+	{% if bookmarks%}
+    {% for bookmark in bookmarks %}
+    <div><p><a href={{bookmark.href}}><b>{{ bookmark.title }}</b></a> {{ bookmark.author.username }} {{bookmark.timestamp}}</p></div>
+    {% endfor %}
+	<div class="pagination">
+	{{ page.pages(pagination, 'user.index') }}
+	</div>
+	{% endif %}
+{% endblock %}

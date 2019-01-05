@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h3>所有用户</h3><hr>
+{% if users %}
+{% for user in users %}
+    <ul class="list-group">
+        <li class="list-group-item">
+            <table>
+                <tr>
+                    <td>
+                        <a href="{{ url_for('user.users',username=user.username) }}">
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('user.users',username=user.username) }}">
+                            <h4>{{ user.username }}</h4>
+                        </a>
+                        <p>分享书签数：{{ user.bookmarks.count() }}</p>
+                    </td>
+                </tr>
+            </table>
+            <div>
+                <span>
+
+                </span>
+                <span class="left">
+                    <br>
+
+                </span>
+
+            </div>
+            <div class="">
+
+            </div>
+        </li>
+    </ul>
+{% endfor %}
+{% endif %}
+{% endblock %}
