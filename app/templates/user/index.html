@@ -14,8 +14,8 @@
 	{% for bookmark in bookmarks %}
 	<tr class="active">
 		<td><a href="{{bookmark.href}}">{{ bookmark.title }}</a></td>
-		<td>{{ bookmark.author.username }}</td>
-		<td>{{bookmark.timestamp}}</td>
+		<td><a href="{{ url_for('user.users', username=bookmark.author.username) }}">{{ bookmark.author.username }}</a></td>
+		<td>{{ moment(bookmark.timestamp).format('YYYY-MM-DD HH:mm') }}</td>
 	</tr>
 	{% endfor %}
 	</tbody>
