@@ -16,106 +16,90 @@
 		 {% endblock %}
 	</head>
 	<body>
-		<div class="container-fluid">
-			<div class="row">
-				<div class="col-md-12">
-					<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-						<div class="navbar-header">
-							<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-								<span class="sr-only">Toggle navigation</span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-								<span class="icon-bar"></span>
-							</button>
-							<a class="navbar-brand" href="{{ url_for('user.index') }}">
-								<font color="#d2691e"> 书签 </font>
+		<div class="navbar navbar-default navbar-static-top">
+			<div class="container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+					<span class="sr-only">Toggle navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					</button>
+				<a class="navbar-brand" href="{{ url_for('user.index') }}">书签</a>
+				</div>
+				<div id="navbar" class="navbar-collapse collapse">
+					<ul class="nav navbar-nav navbar-right">
+						<li {% if title=='发布' %}class="active"{%endif%}>
+							<a href="{% if current_user.is_authenticated %}{{ url_for('user.write') }}{% else %}{{ url_for('auth.login') }}{% endif %}">
+								<span class="glyphicon glyphicon-pencil"></span> 发布
 							</a>
-						</div>
-
-						<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-							<ul class="nav navbar-nav">
-								<li><a></a></li><li><a></a></li><li><a></a></li><li><a></a></li><li><a></a></li>
-								<li {% if title=='首页' %}class="active"{% endif %}>
-									<a href="{{ url_for('user.index') }}">
-										<span class="glyphicon glyphicon-home"/> 首页</a>
+						</li>
+						{% if current_user.is_authenticated %}
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								{{ current_user.username }} <span class="caret"></span>
+							</a>
+							<ul class="dropdown-menu">
+								<li>
+									<a href="{{ url_for('user.users', username=current_user.username) }}">
+										<span class="glyphicon glyphicon-user"></span> 个人中心</a>
 								</li>
-							</ul>
-							<ul class="nav navbar-nav navbar-right">
-								<li {% if title=='发布' %}class="active"{%endif%}>
-									<a href="{% if current_user.is_authenticated %}{{ url_for('user.write') }}{% else %}{{ url_for('auth.login') }}{% endif %}">
-										<span class="glyphicon glyphicon-pencil"></span> 发布
-									</a>
-								</li>
-								{% if current_user.is_authenticated %}
-								<li class="dropdown">
-									<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-										<img src="http://www.gravatar.com/avatar/4adcca49b3b1e5a08ac202f5d5a9e688?d=mm&amp;s=20"> <strong class="caret"></strong>
-									</a>
-									<ul class="dropdown-menu">
-										<li>
-											<a href="{{ url_for('user.users', username=current_user.username) }}">
-												<span class="glyphicon glyphicon-user"></span> 个人主页</a>
-										</li>
-										<li>
-											<a href="{{ url_for('auth.login') }}">
-												<span class="glyphicon glyphicon-refresh"></span> 更改密码</a>
-										</li>
-										{% if current_user.operation(Permission.ADMINISTER) %}
-										<li class="divider">
-										</li>
-										<li>
-											<a href="{{ url_for('admin.bookmarks') }}">
-												<span class="glyphicon glyphicon-th-list"></span> 管理书签</a>
-										</li>
-										<li>
-											<a href="{{ url_for('admin.users') }}">
-												<span class="glyphicon glyphicon-cog"></span> 管理用户</a>
-										</li>
-										{% endif %}
-										<li class="divider">
-										</li>
-										<li>
-											<a href="{{ url_for('auth.logout') }}">
-												<span class="glyphicon glyphicon-log-out"></span> 登出</a>
-										</li>
-									</ul>
-								</li>
-								{% else %}
-								<li {% if title=='登录' %}class="active"{%endif%}>
+								<li>
 									<a href="{{ url_for('auth.login') }}">
-										<span class="glyphicon glyphicon-log-in"></span> 登录</a>
+										<span class="glyphicon glyphicon-refresh"></span> 微信号</a>
+								</li>
+								{% if current_user.operation(Permission.ADMINISTER) %}
+								<li class="divider">
+								</li>
+								<li>
+									<a href="{{ url_for('admin.bookmarks') }}">
+										<span class="glyphicon glyphicon-th-list"></span> 管理书签</a>
+								</li>
+								<li>
+									<a href="{{ url_for('admin.users') }}">
+										<span class="glyphicon glyphicon-cog"></span> 管理用户</a>
 								</li>
 								{% endif %}
-								<li><a></a></li><li><a></a></li><li><a></a></li><li><a></a></li>
+								<li class="divider">
+								</li>
+								<li>
+									<a href="{{ url_for('auth.logout') }}">
+										<span class="glyphicon glyphicon-log-out"></span> 登出</a>
+								</li>
 							</ul>
-						</div>
-					</nav>
+						</li>
+						{% else %}
+						<li {% if title=='登录' %} class="active" {% endif %}>
+							<a href="{{ url_for('auth.login') }}">
+								<span class="glyphicon glyphicon-log-in"></span> 登录</a>
+						</li>
+						{% endif %}
+					</ul>
 				</div>
 			</div>
-			<br><br>
-			<div class="row clearfix">
-				<div class="col-md-2 column">
+		</div>
+		<div class="container">
+			{% with messages = get_flashed_messages() %}
+			{% if messages %}
+			{% for message in messages %}
+				<div id="myAlert" class="alert alert-success">
+					<a href="#" class="close" data-dismiss="alert">&times;</a>
+					<strong>{{ message }}</strong>
 				</div>
-				<div class="col-md-8 column">
-					<br>
-					{% with messages = get_flashed_messages() %}
-					{% if messages %}
-					{% for message in messages %}
-						<div id="myAlert" class="alert alert-success">
-							<a href="#" class="close" data-dismiss="alert">&times;</a>
-							<strong>{{ message }}</strong>
-						</div>
-					{% endfor %}
-					{% endif %}
-					{% endwith %}
-						<div class="main">
-							{% block content %}
-							{% endblock %}
-							<br><br><br><br><br><br><br><br><br><br><br><br>
-						</div>
-				</div>
-				<div class="col-md-2 column">
-				</div>
+			{% endfor %}
+			{% endif %}
+			{% endwith %}
+			
+			<div class="main">
+				{% block content %}
+				{% endblock %}
+			</div>
+		</div>
+		
+		<div id="footer">
+			<div class="container text-center">
+				<a href="#">关于本站</a> | 
+				<a href="#">问题报告</a>  
 			</div>
 		</div>
 

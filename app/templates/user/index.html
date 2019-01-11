@@ -2,6 +2,14 @@
 {% import "_pages.html" as page %}
 
 {% block content %}
+	<ul class="nav nav-tabs">
+	  <li role="presentation" class="active"><a href="#">首页</a></li>
+	  <li role="presentation"><a href="#">精华</a></li>
+	  <li role="presentation"><a href="#">热门</a></li>
+	  <li role="presentation"><a href="#">贡献</a></li>
+	  <li role="presentation"><a href="#">标签</a></li>
+	</ul>
+	<br>
 	{% if bookmarks%}
 	<table class="table">
 	<thead>
