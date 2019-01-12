@@ -17,7 +17,7 @@ def index():
 		page, per_page=app.config['POSTS_PER_PAGE'],
 		error_out=False
 	)
-    # posts = pagination.items
+    # bookmarks = pagination.items
 	bookmarks = [bookmark for bookmark in pagination.items if bookmark.disabled==False]
 	return render_template('user/index.html',
 							title = '首页',
@@ -27,9 +27,14 @@ def index():
 @user.route('/user/<username>')
 @login_required
 def users(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    bookmarks = user.bookmarks.order_by(Bookmark.timestamp.desc())
-    return render_template('user/user.html', title="用户中心", user=user, bookmarks=bookmarks)
+	page = request.args.get('page', 1, type=int)
+	user = User.query.filter_by(username=username).first_or_404()
+	pagination = user.bookmarks.order_by(Bookmark.timestamp.desc()).paginate(
+		page, per_page=app.config['POSTS_PER_PAGE'],
+		error_out=False
+	)
+	bookmarks = pagination.items
+	return render_template('user/user.html', title="用户中心", user=user, bookmarks=bookmarks, pagination=pagination)
 
 @user.route('/write', methods=['GET','POST'])
 @login_required
