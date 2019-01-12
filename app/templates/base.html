@@ -29,8 +29,8 @@
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav navbar-right">
-						<li {% if title=='发布' %}class="active"{%endif%}>
-							<a href="{% if current_user.is_authenticated %}{{ url_for('user.write') }}{% else %}{{ url_for('auth.login') }}{% endif %}">
+						<li {% if title=='发布' %} class="active"{%endif%}>
+							<a href="{{ url_for('user.write') }}">
 								<span class="glyphicon glyphicon-pencil"></span> 发布
 							</a>
 						</li>
@@ -105,7 +105,6 @@
 
 		{% block scripts %}
 		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/floatButton.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 		{{ moment.include_moment() }}
 		{{ moment.lang("zh-CN") }} 

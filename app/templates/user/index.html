@@ -10,26 +10,17 @@
 	  <li role="presentation"><a href="#">标签</a></li>
 	</ul>
 	<br>
-	{% if bookmarks%}
-	<table class="table">
-	<thead>
-	  <tr>
-		<th>标题</th>
-		<th>分享人</th>
-		<th>发布时间</th></tr>
-	</thead>
-	<tbody>
+	{% if bookmarks %}
+	
 	{% for bookmark in bookmarks %}
-	<tr class="active">
-		<td><a href="{{bookmark.href}}">{{ bookmark.title }}</a></td>
-		<td><a href="{{ url_for('user.users', username=bookmark.author.username) }}">{{ bookmark.author.username }}</a></td>
-		<td>{{ moment(bookmark.timestamp).format('YYYY-MM-DD HH:mm') }}</td>
-	</tr>
+	{% if not bookmark.disabled %}
+	{% include "_bookmarks.html" %} 
+	{% endif %}
 	{% endfor %}
-	</tbody>
-	</table>
+
 	<div class="pagination">
 	{{ page.pages(pagination, 'user.index') }}
 	</div>
 	{% endif %}
+
 {% endblock %}

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
 
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db, login
@@ -76,7 +76,17 @@ class Role(db.Model):
 
     def __repr__(self):
         return '<Role %r>' % (self.name)
-	
+
+class AnonymousUser(AnonymousUserMixin):
+    def operation(self, permissions):
+        return False
+
+    def is_administrator(self):
+        return False
+
+login.anonymous_user = AnonymousUser
+
+		
 class Permission:
     FOLLOW = 0x01
     COMMENT = 0x02
