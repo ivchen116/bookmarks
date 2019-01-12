@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
@@ -20,7 +20,7 @@ def index():
     # posts = pagination.items
 	bookmarks = [bookmark for bookmark in pagination.items if bookmark.disabled==False]
 	return render_template('user/index.html',
-							title = 'Home Page',
+							title = '首页',
 							bookmarks=bookmarks,
 							pagination=pagination)
 	
@@ -29,7 +29,7 @@ def index():
 def users(username):
     user = User.query.filter_by(username=username).first_or_404()
     bookmarks = user.bookmarks.order_by(Bookmark.timestamp.desc())
-    return render_template('user/user.html', user=user, bookmarks=bookmarks)
+    return render_template('user/user.html', title="用户中心", user=user, bookmarks=bookmarks)
 
 @user.route('/write', methods=['GET','POST'])
 @login_required
@@ -41,7 +41,7 @@ def write():
 		db.session.commit()
 		flash('Your post is now live!')
 		return redirect(url_for('user.index'))
-	return render_template("user/write.html", title='Write Bookmark', form=form)
+	return render_template("user/write.html", title='发布', form=form)
 
 @user.route('/edit/<int:id>', methods=['GET','POST'])
 @login_required
@@ -63,5 +63,5 @@ def edit(id):
 	return render_template('user/edit.html',
                            form=form,
                            bookmark=bookmark,
-                           title='edit bookmark')
+                           title='编辑')
 

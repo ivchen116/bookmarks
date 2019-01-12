@@ -9,6 +9,10 @@ from flask_moment import Moment
 
 from config import Config
 
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
+
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
