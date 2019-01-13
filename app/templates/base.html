@@ -102,10 +102,16 @@
 				<a href="#">问题报告</a>  
 			</div>
 		</div>
+		
+		<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			 <!--modal内容在此加载-->
+		</div>
 
 		{% block scripts %}
 		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/jquery.form.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
 		{{ moment.include_moment() }}
 		{{ moment.lang("zh-CN") }} 
 		{% endblock %}

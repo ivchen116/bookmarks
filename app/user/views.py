@@ -70,3 +70,33 @@ def edit(id):
                            bookmark=bookmark,
                            title='编辑')
 
+@user.route('/sedit/<int:id>', methods=['GET','POST'])
+@login_required
+def sedit(id):
+	bookmark = Bookmark.query.get_or_404(id)
+	if current_user != bookmark.author and \
+		not current_user.operation(Permission.ADMINISTER):
+		abort(403)
+	form = BookmarkForm()
+	
+	#POST
+	if request.method == "POST":
+		if form.validate_on_submit():
+			bookmark.title = form.title.data
+			bookmark.href = form.href.data
+			db.session.add(bookmark)
+			db.session.commit()
+			return "0"
+		else :
+			return "1"
+	
+	#GET
+	form.title.data = bookmark.title
+	form.href.data = bookmark.href
+	formaction='/sedit/' + str(id)
+	return render_template('user/sedit.html',
+                           form=form,
+						   formaction=formaction,
+                           bookmark=bookmark,
+                           title='编辑')
+

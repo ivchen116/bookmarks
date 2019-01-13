@@ -22,7 +22,7 @@
 		<td>{{ moment(bookmark.timestamp).format('YYYY-MM-DD HH:mm') }}</td>
 		{% if current_user == user or current_user.is_administrator() %}
 		<td>
-			<a class="btn btn-warning btn-xs" href="{{ url_for('user.edit', id=bookmark.id) }}">编辑</a>
+			<button type="button" class="bmedit btn btn-warning btn-xs" data-src="{{bookmark.id}}" onclick="showEditModal({{bookmark.id}})">编辑</button>
 			<a class="btn btn-warning btn-xs" href="{{ url_for('admin.delete_bookmark',id=bookmark.id) }}">删除</a>
 		</td>
 		{% endif %}
