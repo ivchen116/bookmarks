@@ -11,13 +11,13 @@
 	</ul>
 	<br>
 	{% if bookmarks %}
-	
+	<div class="page_queue_list">
 	{% for bookmark in bookmarks %}
 	{% if not bookmark.disabled %}
 	{% include "_bookmarks.html" %} 
 	{% endif %}
 	{% endfor %}
-
+	</div>
 	<div class="pagination">
 	{{ page.pages(pagination, 'user.index') }}
 	</div>

@@ -1,22 +1,20 @@
-<div >
-	<div >
-		<a href="{{bookmark.href}}">{{ bookmark.title }}</a>
-		<a href="{{bookmark.href}}">原链接</a>
-		<a class="btn btn-default btn-xs" href="#">精华</a>
-	</div>
-
-	<div >
-		<a href="{{ url_for('user.users', username=bookmark.author.username) }}">{{ bookmark.author.username }}</a> |
-		{{ moment(bookmark.timestamp).format('YYYY-MM-DD HH:mm') }} | 
-		阅读数：<span class="badge">10</span> |
-		
-		{% if current_user == bookmark.author %}
-		<button type="button" class="bmedit btn btn-default btn-xs" data-src="{{bookmark.id}}" onclick="showEditModal({{bookmark.id}})">编辑</button>
-		<a class="btn btn-default btn-xs" href="{{ url_for('admin.delete_bookmark',id=bookmark.id) }}">删除</a>
-		{% elif current_user.is_administrator() %}
-		<button type="button" class="bmedit btn btn-warning btn-xs" data-src="{{bookmark.id}}" onclick="showEditModal({{bookmark.id}})">编辑</button>
-		<a class="btn btn-warning btn-xs" href="{{ url_for('admin.delete_bookmark',id=bookmark.id) }}">删除</a>
-		{% endif %}
-	</div>
+<div class="item item_type_normal" id="{{ bookmark.id }}">
+<div class="item_content">
+	<a class="item_link start_articleview" href="{{bookmark.href}}" target="_blank"></a>
+	<a class="title" href="{{bookmark.href}}">{{ bookmark.title }}</a>
+	<span class="thumb" style="background-image: url(/static/image/direct.jpg)"> </span>
+	<ul class="sub clearfix">
+		<li class="original_url_container"><a class="original_url" href="{{ bookmark.href }}" target="_blank">{{ bookmark.href }}</a></li>
+		<li class="tags">
+			<span class="tag_container"></span>
+			<a class="edit"><span>添加标记</span></a>
+		</li>
+	</ul>
+	<div class="clear"></div>
+	<ul class="buttons">
+			<li class="action_delete" title="删除"><a href="#">删除</a></li>
+			<li class="action_tag" title="编辑标记"><a href="#">编辑标记</a></li>
+			<li class="action_favorite " title="标记为精华"><a href="#">标记为精华</a></li>
+	</ul>
 </div>
-<hr>
+</div>
