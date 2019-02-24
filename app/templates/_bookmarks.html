@@ -4,7 +4,7 @@
 	<a class="title" href="{{bookmark.href}}">{{ bookmark.title }}</a>
 	<span class="thumb" style="background-image: url(/static/image/direct.jpg)"> </span>
 	<ul class="sub clearfix">
-		<li class="original_url_container"><a class="original_url" href="{{ bookmark.href }}" target="_blank">{{ bookmark.href }}</a></li>
+		<li class="original_url_container"><a class="original_url" href="{{ bookmark.href }}" target="_blank">{{ bookmark.netloc() }}</a></li>
 		<li class="tags">
 			<span class="tag_container"></span>
 			<a class="edit"><span>添加标记</span></a>

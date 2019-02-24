@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+from urlparse import urlparse
 
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -106,3 +107,6 @@ class Bookmark(db.Model):
 	
 	def __repr__(self):
 		return '<Bookmark {}>'.format(self.title)
+
+	def netloc(self):
+		return urlparse(self.href).netloc
