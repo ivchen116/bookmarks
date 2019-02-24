@@ -5,10 +5,14 @@
 	<span class="thumb" style="background-image: url(/static/image/direct.jpg)"> </span>
 	<ul class="sub clearfix">
 		<li class="original_url_container"><a class="original_url" href="{{ bookmark.href }}" target="_blank">{{ bookmark.netloc() }}</a></li>
-		<li class="tags">
-			<span class="tag_container"></span>
-			<a class="edit"><span>添加标记</span></a>
+		<li class="tags hasTags">
+			<span class="tag_container">
+				<a class="tag" href="/tags/abcd">标签1</a>
+			</span>
 		</li>
+	</ul>
+	<ul class="clearfix" style="display:none">
+		<li class="author">{{bookmark.author.username}}</li>
 	</ul>
 	<div class="clear"></div>
 	<ul class="buttons">
