@@ -101,6 +101,26 @@ body{
 	padding:0;
 }
 
+@media only screen and (min-width:40em) {
+	.page_queue_list .item_content {
+	height:100px
+}
+}
+@media only screen and (min-width:50em) {
+	.page_queue_list .item_content {
+	height:80px
+}
+}
+@media only screen and (min-width:38em) {
+	.page_queue_list .item_content {
+	border-left-width:1px;
+	border-right-width:1px
+}
+}
+.page_queue_list .item_type_spoc .item_content {
+	height:auto
+}
+
 .item .title {
 	display:block;
 	color:#313131;
@@ -120,7 +140,7 @@ body{
 	color:#C6C5C4
 }
 .no-touch .item_link:hover+.title {
-	color:#50bcb6
+	color:#337ab7
 }
 
 @media only screen and (min-width:38em) {
