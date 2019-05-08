@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
-from urlparse import urlparse
 
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -95,18 +94,31 @@ class Permission:
     MODERATE_COMMENTS = 0x08
     ADMINISTER = 0x80
 	
+class Link(db.Model):
+	__tablename__ = 'links'
+	id = db.Column(db.Integer, primary_key=True)
+	url = db.Column(db.String(256), unique=True)
+	netloc = db.Column(db.String(128))
+	title = db.Column(db.String(256))
+	preview = db.Column(db.String(256))
+	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+	create_author = db.Column(db.Integer, db.ForeignKey('users.id'))
+	
+	bookmarks = db.relationship('Bookmark', backref='link', lazy='dynamic')
+	
+	def __repr__(self):
+		return '<Link {}>'.format(self.title)
+	
 class Bookmark(db.Model):
 	__tablename__ = 'bookmarks'
 	id = db.Column(db.Integer, primary_key=True)
-	title = db.Column(db.String(128))
-	href = db.Column(db.String(128))
 	disabled = db.Column(db.Boolean, default=False)
-	view_num = db.Column(db.Integer, default=0)
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+	
+	link_id = db.Column(db.Integer, db.ForeignKey('links.id'))
 	author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	
 	def __repr__(self):
-		return '<Bookmark {}>'.format(self.title)
-
-	def netloc(self):
-		return urlparse(self.href).netloc
+		return '<Bookmark {}>'.format(self.id)
+		
+		

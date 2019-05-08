@@ -2,11 +2,12 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
+from urlparse import urlparse
 
 from app import app, db
 from . import user
 from .forms import BookmarkForm
-from ..models import User, Bookmark, Permission
+from ..models import User, Link, Bookmark, Permission
 
 
 @user.route('/')
@@ -41,7 +42,11 @@ def users(username):
 def write():
 	form = BookmarkForm()
 	if form.validate_on_submit():
-		bookmark = Bookmark(title=form.title.data, href=form.href.data, author=current_user)
+		link = Link.query.filter_by(url=form.href.data).first()
+		if link is None:
+			link = Link(url=form.href.data, title = form.title.data, netloc = urlparse(form.href.data).netloc)
+			db.session.add(link)
+		bookmark = Bookmark(author=current_user, link=link)
 		db.session.add(bookmark)
 		db.session.commit()
 		flash('Your post is now live!')
