@@ -6,6 +6,5 @@ from app.models import User
 
 
 class BookmarkForm(FlaskForm):
-	title = StringField('title', validators=[DataRequired()])
 	href = StringField('href', validators=[DataRequired()])
 	submit = SubmitField('Submit')

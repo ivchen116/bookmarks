@@ -3,11 +3,13 @@ from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from urlparse import urlparse
+from datetime import datetime
 
 from app import app, db
 from . import user
 from .forms import BookmarkForm
 from ..models import User, Link, Bookmark, Permission
+from . import link_detail
 
 
 @user.route('/')
@@ -40,15 +42,33 @@ def users(username):
 @user.route('/write', methods=['GET','POST'])
 @login_required
 def write():
+	newlink = False
 	form = BookmarkForm()
 	if form.validate_on_submit():
+		#link
 		link = Link.query.filter_by(url=form.href.data).first()
 		if link is None:
-			link = Link(url=form.href.data, title = form.title.data, netloc = urlparse(form.href.data).netloc)
+			link = Link(url=form.href.data, netloc = urlparse(form.href.data).netloc)
 			db.session.add(link)
-		bookmark = Bookmark(author=current_user, link=link)
+			newlink = True
+		
+		#bookmark
+		if newlink is False:
+			bookmark = Bookmark.query.filter_by(link_id=link.id).first() #重复只更新时间
+			if bookmark is None:
+				bookmark = Bookmark(author=current_user, link=link)
+			else :
+				bookmark.timestamp = datetime.utcnow()
+		else :
+			bookmark = Bookmark(author=current_user, link=link)
+			
 		db.session.add(bookmark)
 		db.session.commit()
+		
+		#new link post
+		if newlink or link.title is None:
+			link_detail.get_link(app, form.href.data)
+			
 		flash('Your post is now live!')
 		return redirect(url_for('user.index'))
 	return render_template("user/write.html", title='发布', form=form)
