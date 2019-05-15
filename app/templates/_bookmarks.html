@@ -1,7 +1,13 @@
 <div class="item item_type_normal" id="{{ bookmark.id }}">
 <div class="item_content">
 	<a class="item_link start_articleview" href="{{bookmark.link.url}}" target="_blank"></a>
-	<a class="title" href="{{bookmark.link.url}}">{{ bookmark.link.title }}</a>
+	<a class="title" href="{{bookmark.link.url}}">
+		{% if bookmark.link.title %}
+        {{ bookmark.link.title }}
+        {% else %}
+        {{bookmark.link.url}}
+        {% endif %}
+	</a>
 	<span class="thumb" style="background-image: url(/static/image/direct.jpg)"> </span>
 	<ul class="sub clearfix">
 		<li class="original_url_container"><a class="original_url" href="{{ bookmark.link.url }}" target="_blank">{{ bookmark.link.netloc }}</a></li>

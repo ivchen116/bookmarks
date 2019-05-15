@@ -24,7 +24,9 @@ login.login_view = 'auth.login'
 from .user import user as user_blueprint
 from .auth import auth as auth_blueprint
 from .admin import admin as admin_blueprint
+from .item import item as item_blueprint
 app.register_blueprint(user_blueprint)
 app.register_blueprint(auth_blueprint, url_prefix='/auth')
 app.register_blueprint(admin_blueprint, url_prefix='/admin')
+app.register_blueprint(item_blueprint, url_prefix='/item')
 

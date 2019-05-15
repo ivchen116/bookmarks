@@ -114,6 +114,7 @@ class Bookmark(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	disabled = db.Column(db.Boolean, default=False)
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+	finish = db.Column(db.Boolean, default=False)
 	
 	link_id = db.Column(db.Integer, db.ForeignKey('links.id'))
 	author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
