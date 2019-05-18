@@ -119,6 +119,19 @@ class Bookmark(db.Model):
 	link_id = db.Column(db.Integer, db.ForeignKey('links.id'))
 	author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	
+	def to_dict(self):
+		data = {
+			'id': self.id,
+			'url': self.link.url,
+			'title': self.link.title,
+			'netloc': self.link.netloc,
+			'preview': self.link.preview,
+			'timestamp': int(time.mktime(self.timestamp.timetuple())),
+			'finish': self.finish
+		}
+
+		return data
+	
 	def __repr__(self):
 		return '<Bookmark {}>'.format(self.id)
 		
