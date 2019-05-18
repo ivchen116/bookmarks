@@ -1,16 +1,16 @@
 <div class="item item_type_normal" id="{{ bookmark.id }}">
 <div class="item_content">
-	<a class="item_link start_articleview" href="{{bookmark.link.url}}" target="_blank"></a>
-	<a class="title" href="{{bookmark.link.url}}">
-		{% if bookmark.link.title %}
-        {{ bookmark.link.title }}
+	<a class="item_link start_articleview" href="{{bookmark.given_url}}" target="_blank"></a>
+	<a class="title" href="{{bookmark.given_url}}">
+		{% if bookmark.resolved_title %}
+        {{ bookmark.resolved_title }}
         {% else %}
-        {{bookmark.link.url}}
+        {{bookmark.given_url}}
         {% endif %}
 	</a>
 	<span class="thumb" style="background-image: url(/static/image/direct.jpg)"> </span>
 	<ul class="sub clearfix">
-		<li class="original_url_container"><a class="original_url" href="{{ bookmark.link.url }}" target="_blank">{{ bookmark.link.netloc }}</a></li>
+		<li class="original_url_container"><a class="original_url" href="{{ bookmark.given_url }}" target="_blank">{{ bookmark.netloc }}</a></li>
 		<li class="tags hasTags">
 			<span class="tag_container">
 				<a class="tag" href="/tags/abcd">标签</a>

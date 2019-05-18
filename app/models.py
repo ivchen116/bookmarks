@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from datetime import datetime
+import time
 
 from flask_login import UserMixin, AnonymousUserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -94,40 +95,37 @@ class Permission:
     MODERATE_COMMENTS = 0x08
     ADMINISTER = 0x80
 	
-class Link(db.Model):
-	__tablename__ = 'links'
-	id = db.Column(db.Integer, primary_key=True)
-	url = db.Column(db.String(256), unique=True)
-	netloc = db.Column(db.String(128))
-	title = db.Column(db.String(256))
-	preview = db.Column(db.String(256))
-	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-	create_author = db.Column(db.Integer, db.ForeignKey('users.id'))
-	
-	bookmarks = db.relationship('Bookmark', backref='link', lazy='dynamic')
-	
-	def __repr__(self):
-		return '<Link {}>'.format(self.title)
-	
+
 class Bookmark(db.Model):
 	__tablename__ = 'bookmarks'
 	id = db.Column(db.Integer, primary_key=True)
+	given_url = db.Column(db.String(256), index=True)
+	netloc = db.Column(db.String(128))
+	given_title = db.Column(db.String(256))
 	disabled = db.Column(db.Boolean, default=False)
-	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-	finish = db.Column(db.Boolean, default=False)
+	archived = db.Column(db.Boolean, default=False)
 	
-	link_id = db.Column(db.Integer, db.ForeignKey('links.id'))
+	image_url = db.Column(db.String(256))
+	resolved_url = db.Column(db.String(256), index=True)
+	resolved_title = db.Column(db.String(256))
+	
+	time_added = db.Column(db.DateTime, default=datetime.utcnow)
+	time_updated = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+	
 	author_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 	
 	def to_dict(self):
 		data = {
 			'id': self.id,
 			'url': self.link.url,
-			'title': self.link.title,
-			'netloc': self.link.netloc,
-			'preview': self.link.preview,
-			'timestamp': int(time.mktime(self.timestamp.timetuple())),
-			'finish': self.finish
+			'title': self.title,
+			'netloc': self.netloc,
+			'resolved_url': self.resolved_url,
+			'resolved_title': self.resolved_title,
+			'image_url': self.image_url,
+			'time_added': int(time.mktime(self.time_added.timetuple())),
+			'time_updated': int(time.mktime(self.time_updated.timetuple())),
+			'archived': self.archived
 		}
 
 		return data

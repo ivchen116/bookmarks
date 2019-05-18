@@ -6,7 +6,7 @@ from datetime import datetime
 
 from app import app, db
 from . import item
-from ..models import User, Bookmark, Link
+from ..models import User, Bookmark
 
 
 @item.route('/add', methods=['GET', 'POST'])
@@ -20,22 +20,12 @@ def add():
 			'status': 0
 		})
 	
-	newlink = False
-	link = Link.query.filter_by(url=url).first()
-	if link is None:
-		link = Link(url=url, netloc = urlparse(url).netloc)
-		db.session.add(link)
-		newlink = True
-	
-	#bookmark
-	if newlink is False:
-		bookmark = Bookmark.query.filter_by(link_id=link.id).first() #重复只更新时间
-		if bookmark is None:
-			bookmark = Bookmark(author=current_user, link=link)
-		else :
-			bookmark.timestamp = datetime.utcnow()
-	else :
-		bookmark = Bookmark(author=current_user, link=link)
+	bookmark = current_user.bookmarks.filter_by(given_url=url).first()
+	if bookmark:
+		bookmark.time_updated = datetime.utcnow()
+	else:
+		bookmark = Bookmark(author=current_user, given_url=url, 
+					given_title=title, netloc = urlparse(url).netloc)
 		
 	db.session.add(bookmark)
 	db.session.commit()
@@ -124,18 +114,18 @@ def get():
 			'status': 0
 		})
 	
-	finish = True
+	archived = True
 	if state == 'queue':
-		finish = False
+		archived = False
 	elif state == 'archive':
-		finish = True
+		archived = True
 	else:
 		return jsonify({
 			'status': 0
 		})
 	
-	bookmarks = current_user.bookmarks.filter_by(finish=finish).order_by(
-				Bookmark.timestamp.desc()).limit(count).offset(offset)
+	bookmarks = current_user.bookmarks.filter_by(archived=archived).order_by(
+				Bookmark.time_updated.desc()).limit(count).offset(offset)
 
 	data = {
 				'lists': [item.to_dict() for item in bookmarks],
