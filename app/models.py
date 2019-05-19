@@ -116,13 +116,14 @@ class Bookmark(db.Model):
 	
 	def to_dict(self):
 		data = {
-			'id': self.id,
-			'url': self.link.url,
-			'title': self.title,
+			'itemid': self.id,
+			'given_url': self.given_url,
+			'given_title': self.given_title,
 			'netloc': self.netloc,
 			'resolved_url': self.resolved_url,
 			'resolved_title': self.resolved_title,
 			'image_url': self.image_url,
+			'author': self.author.username,
 			'time_added': int(time.mktime(self.time_added.timetuple())),
 			'time_updated': int(time.mktime(self.time_updated.timetuple())),
 			'archived': self.archived

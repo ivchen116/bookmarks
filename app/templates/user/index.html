@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import "_pages.html" as page %}
 
 {% block content %}
 	<div class="subnav">
@@ -16,17 +15,19 @@
 		  </div>
 		</div>
 	</div>
-	{% if bookmarks %}
-	<div class="page_queue_list">
-	{% for bookmark in bookmarks %}
-	{% if not bookmark.disabled %}
-	{% include "_bookmarks.html" %} 
-	{% endif %}
-	{% endfor %}
-	</div>
-	<div class="pagination">
-	{{ page.pages(pagination, 'user.index') }}
-	</div>
-	{% endif %}
 
+	<div class="page_queue_list">
+	</div>
+
+	<div class="loading">
+		<div class="btn-group btn-group-justified" role="group" aria-label="...">
+		  <div class="btn-group" role="group">
+			<button type="button" class="btn btn-default" id="btn-loading">加载更多...</button>
+		  </div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/item.js') }}"></script>
 {% endblock %}

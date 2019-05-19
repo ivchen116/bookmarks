@@ -112,10 +112,13 @@
 		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/jquery.form.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-		<script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/util.js') }}"></script>
 		{{ moment.include_moment() }}
-		{{ moment.lang("zh-CN") }} 
+		{{ moment.lang("zh-CN") }}
 		{% endblock %}
+		<!-- Custom -->
+		
+		{% block extra_js %}{% endblock %}
 	</body>
 </html>
 																											

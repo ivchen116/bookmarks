@@ -12,8 +12,12 @@ from ..models import User, Bookmark
 @item.route('/add', methods=['GET', 'POST'])
 @login_required
 def add():
-	url = request.args.get('url')
-	title = request.args.get('title')
+	if request.method == 'POST':
+		url = request.form['url']
+		title = request.form['title']
+	else:
+		url = request.args.get('url')
+		title = request.args.get('title')
 	
 	if url is None:
 		return jsonify({
@@ -37,8 +41,11 @@ def add():
 @item.route('/delete', methods=['GET', 'POST'])
 @login_required
 def delete():
-	itemid = request.args.get('id')
-	url = request.args.get('url')
+	if request.method == 'POST':
+		itemid = request.form['id']
+	else:
+		itemid = request.args.get('id')
+		url = request.args.get('url')
 	
 	if itemid is None or not itemid.isdigit():
 		return jsonify({
@@ -60,22 +67,26 @@ def delete():
 		'status': 1
 	})
 	
-@item.route('/finish', methods=['GET', 'POST'])
+@item.route('/archive', methods=['GET', 'POST'])
 @login_required
-def finish():
-	itemid = request.args.get('id')
-	done = request.args.get('done')
+def archive():
+	if request.method == 'POST':
+		itemid = request.form['id']
+		done = request.form['done']
+	else:
+		itemid = request.args.get('id')
+		done = request.args.get('done')
 
 	if itemid is None or done is None:
 		return jsonify({
 			'status': 0
 		})
 	
-	finish = True
+	archive = True
 	if done == '0':
-		finish = False
+		archive = False
 	elif done == '1':
-		finish = True
+		archive = True
 	else:
 		return jsonify({
 			'status': 0
@@ -88,8 +99,8 @@ def finish():
 			'status': 0
 		})
 	
-	if finish != bookmark.finish:
-		bookmark.finish = finish
+	if archive != bookmark.archived:
+		bookmark.archived = archive
 		db.session.add(bookmark)
 		db.session.commit()
 	
@@ -100,9 +111,14 @@ def finish():
 @item.route('/get', methods=['GET', 'POST'])
 @login_required
 def get():
-	offset = request.args.get('offset')
-	count = request.args.get('count')
-	state = request.args.get('state')
+	if request.method == 'POST':
+		offset = request.form['offset']
+		count = request.form['count']
+		state = request.form['state']
+	else:
+		offset = request.args.get('offset')
+		count = request.args.get('count')
+		state = request.args.get('state')
 	
 	if offset is None or not offset.isdigit():
 		return jsonify({
@@ -124,7 +140,7 @@ def get():
 			'status': 0
 		})
 	
-	bookmarks = current_user.bookmarks.filter_by(archived=archived).order_by(
+	bookmarks = current_user.bookmarks.filter_by(disabled=False, archived=archived).order_by(
 				Bookmark.time_updated.desc()).limit(count).offset(offset)
 
 	data = {
