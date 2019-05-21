@@ -29,9 +29,9 @@
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
-						<li><a href="#">我的列表</a></li>
-						<li><a href="#">热门</a></li>
-						<li><a href="#">发现</a></li>
+						<!--<li><a href="#">我的列表</a></li>-->
+						<!--<li><a href="#">热门</a></li>-->
+						<!--<li><a href="#">发现</a></li>-->
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
 						<li {% if title=='发布' %} class="active"{%endif%}>
@@ -113,6 +113,8 @@
 		<script src="{{ url_for('static', filename='js/jquery.form.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/util.js') }}"></script>
+		<script src="{{ url_for('static', filename='js/bootstrap-confirmation.min.js') }}"></script>
+		
 		{{ moment.include_moment() }}
 		{{ moment.lang("zh-CN") }}
 		{% endblock %}

@@ -8,15 +8,14 @@ from datetime import datetime
 from app import app, db
 from . import user
 from .forms import BookmarkForm
-from ..models import User, Link, Bookmark, Permission
-from . import link_detail
-
+from ..models import User, Bookmark, Permission
+import url_resolve
 
 @user.route('/')
-@user.route('/index')
+@login_required
 def index():
 	page = request.args.get('page', 1, type=int)
-	pagination = Bookmark.query.filter_by(disabled=False).order_by(Bookmark.timestamp.desc()).paginate(
+	pagination = Bookmark.query.filter_by(disabled=False).order_by(Bookmark.time_updated.desc()).paginate(
 		page, per_page=app.config['POSTS_PER_PAGE'],
 		error_out=False
 	)
@@ -32,7 +31,7 @@ def index():
 def users(username):
 	page = request.args.get('page', 1, type=int)
 	user = User.query.filter_by(username=username).first_or_404()
-	pagination = user.bookmarks.order_by(Bookmark.timestamp.desc()).paginate(
+	pagination = user.bookmarks.order_by(Bookmark.time_updated.desc()).paginate(
 		page, per_page=app.config['POSTS_PER_PAGE'],
 		error_out=False
 	)
@@ -42,33 +41,22 @@ def users(username):
 @user.route('/write', methods=['GET','POST'])
 @login_required
 def write():
-	newlink = False
 	form = BookmarkForm()
 	if form.validate_on_submit():
-		#link
-		link = Link.query.filter_by(url=form.href.data).first()
-		if link is None:
-			link = Link(url=form.href.data, netloc = urlparse(form.href.data).netloc)
-			db.session.add(link)
+		newlink = False
+		bookmark = current_user.bookmarks.filter_by(given_url=form.href.data).first()
+		if bookmark:
+			bookmark.time_updated = datetime.utcnow()
+		else:
+			bookmark = Bookmark(author=current_user, given_url=form.href.data, netloc = urlparse(form.href.data).netloc)
 			newlink = True
-		
-		#bookmark
-		if newlink is False:
-			bookmark = Bookmark.query.filter_by(link_id=link.id).first() #重复只更新时间
-			if bookmark is None:
-				bookmark = Bookmark(author=current_user, link=link)
-			else :
-				bookmark.timestamp = datetime.utcnow()
-		else :
-			bookmark = Bookmark(author=current_user, link=link)
 			
 		db.session.add(bookmark)
 		db.session.commit()
-		
-		#new link post
-		if newlink or link.title is None:
-			link_detail.get_link(app, form.href.data)
-			
+
+		#resolve title/url
+		url_resolve.update_link(app, bookmark)
+
 		flash('Your post is now live!')
 		return redirect(url_for('user.index'))
 	return render_template("user/write.html", title='发布', form=form)

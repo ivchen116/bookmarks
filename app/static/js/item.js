@@ -1,30 +1,6 @@
 // Empty JS for your own code to be here
 
 $(document).ready(function(){
-
-	$('.page_queue_list').on('click', '.action_delete a', function(e){
-		var item = $(this).closest('.item')
-		
-		// notify user first
-		
-		$.ajax({    
-			url: "/item/delete",    
-			dataType: "json", 
-			data: { id: item.attr("id") },    //参数值    
-			type: "POST",    
-			context: item,
-			success: function(data) {
-				if (data.status == '1') {
-					$(this).remove();
-				}
-			}, 
-			error: function() {        
-				
-			}
-		});	
-		
-		e.preventDefault();
-	});
 	
 	$('.page_queue_list').on('click', '.action_archive a', function(e){
 		var item = $(this).closest('.item')
@@ -48,12 +24,6 @@ $(document).ready(function(){
 		e.preventDefault();
 	});
 	
-	//just test for add
-	$('.page_queue_list').on('click', '.action_tag a', function(e){
-		$(".page_queue_list").prepend($(this).closest('.item').prop("outerHTML"));
-		e.preventDefault();			//disable #
-	});
-	
 	function load_more_item(offset, count, state, collection) {
 		items_is_loading = true;
 		$("#btn-loading").attr("disabled","disabled");
@@ -66,7 +36,7 @@ $(document).ready(function(){
 			success: function(data) {
 				if (data.status == '1') {
 					$.each(data.lists, function(i, item) {
-						var item_template="<div class=\"item item_type_normal\" id=\"{id}\"><div class=\"item_content\"><a class=\"item_link start_articleview\" href=\"{url}\" target=\"_blank\"></a><a class=\"title\" href=\"{url}\">{title}</a><span class=\"thumb\" style=\"background-image: url(/static/image/direct.jpg)\"> </span><ul class=\"sub clearfix\"><li class=\"original_url_container\"><a class=\"original_url\" href=\"{url}\" target=\"_blank\">{netloc}</a></li><li class=\"tags hasTags\"><span class=\"tag_container\"><a class=\"tag\" href=\"/tags/abcd\">标签</a></span></li></ul><ul class=\"clearfix\" style=\"display:none\"><li class=\"author\">{author}</li></ul><div class=\"clear\"></div><ul class=\"buttons\"><li class=\"action_delete\" title=\"删除\"><a href=\"#\">删除</a></li><li class=\"action_tag\" title=\"编辑标记\"><a href=\"#\">编辑标记</a></li><li class=\"action_favorite \" title=\"标记为精华\"><a href=\"#\">标记为精华</a></li></ul></div></div> ";
+						var item_template="<div class=\"item item_type_normal\" id=\"{id}\"><div class=\"item_content\"><a class=\"item_link start_articleview\" href=\"{url}\" target=\"_blank\"></a><a class=\"title\" href=\"{url}\">{title}</a><span class=\"thumb\" style=\"background-image: url(/static/image/direct.jpg)\"> </span><ul class=\"sub clearfix\"><li class=\"original_url_container\"><a class=\"original_url\" href=\"{url}\" target=\"_blank\">{netloc}</a></li><li class=\"tags hasTags\"><span class=\"tag_container\"><a class=\"tag\" href=\"/tags/abcd\">标签</a></span></li></ul><ul class=\"clearfix\" style=\"display:none\"><li class=\"author\">{author}</li></ul><div class=\"clear\"></div><ul class=\"buttons\"><li class=\"action_delete\" title=\"删除\"><a href=\"#\"  data-toggle=\"delete-confirmation\">删除</a></li><li class=\"action_tag\" title=\"编辑标记\"><a href=\"#\">编辑标记</a></li><li class=\"action_favorite \" title=\"标记为精华\"><a href=\"#\">标记为精华</a></li></ul></div></div> ";
 						var dis_title = item.given_title?item.given_title:item.resolved_title;
 						dis_title = dis_title?dis_title:item.given_url;
 						var item_html=item_template.format({id:item.itemid, url:item.given_url, title:dis_title, netloc:item.netloc, author: item.author});
@@ -99,12 +69,41 @@ $(document).ready(function(){
 	load_more_item(items_have_get, items_per_page, 'queue', '');
 	
 	$(window).scroll(function () {
-		if ($(window).scrollTop() + $(window).height() == $(document).height()) { //滚动到底部时
+		if ($(window).scrollTop() + $(window).height() == $(document).height()) { 
 			if (items_is_loading==false&&items_has_more)
 			{
 				load_more_item(items_have_get, items_per_page, 'queue', '');
 			}
 		}
 	});
-
+$('body').confirmation({
+    rootSelector: '[data-toggle=delete-confirmation]',
+    selector: '[data-toggle=delete-confirmation]',
+	container: 'body',
+	singleton: true,
+	popout: true,
+	placement: 'bottom',
+	title: '确定删除吗？',
+	btnOkLabel: '删除',
+	btnCancelLabel: '取消',
+	onConfirm: function(value) {
+		var item = $(this).closest('.item')
+		
+		$.ajax({    
+			url: "/item/delete",    
+			dataType: "json", 
+			data: { id: item.attr("id") },    
+			type: "POST",    
+			context: item,
+			success: function(data) {
+				if (data.status == '1') {
+					$(this).remove();
+				}
+			}, 
+			error: function() {        
+				
+			}
+		});
+	}
+});
 });
