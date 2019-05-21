@@ -45,7 +45,7 @@ $(document).ready(function(){
 					items_have_get += data.lists.length
 					if (data.lists.length < items_per_page) {
 						items_has_more = false;
-						$("#btn-loading").text("后面没有了");
+						$("#btn-loading").hide();
 						
 					}
 					else {
@@ -106,4 +106,26 @@ $('body').confirmation({
 		});
 	}
 });
+
+$('#addarticle-menu').popover({
+	singleton: true,
+	container: 'body',
+    html: 'true',
+	placement: 'bottom',
+	content : function() {
+    return $('#addarticle-content').html();
+}
+});
+
+$(document).on('click', function (e) {
+    $('[data-toggle="popover"],[data-original-title]').each(function () {
+        //the 'is' for buttons that trigger popups
+        //the 'has' for icons within a button that triggers a popup
+        if (!$(this).is(e.target) && $(this).has(e.target).length === 0 && $('.popover').has(e.target).length === 0) {                
+            (($(this).popover('hide').data('bs.popover')||{}).inState||{}).click = false  // fix for BS 3.3.6
+        }
+
+    });
+});
+
 });

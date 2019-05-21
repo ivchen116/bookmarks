@@ -34,12 +34,12 @@
 						<!--<li><a href="#">发现</a></li>-->
 					</ul>
 					<ul class="nav navbar-nav navbar-right">
-						<li {% if title=='发布' %} class="active"{%endif%}>
-							<a href="{{ url_for('user.write') }}">
+						{% if current_user.is_authenticated %}
+						<li>
+							<a href="#" id="addarticle-menu" data-toggle="popover">
 								<span class="glyphicon glyphicon-pencil"></span> 发布
 							</a>
 						</li>
-						{% if current_user.is_authenticated %}
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 								{{ current_user.username }} <span class="caret"></span>
@@ -107,7 +107,18 @@
 				<a href="#">问题报告</a>  
 			</div>
 		</div>
-
+		<div id="addarticle-content" class="hide">
+		  <form class="form-inline" role="form">
+			<div class="form-group"> 
+			  <div class="input-group">
+			  <input id="addarticle-url" type="text" class="form-control" placeholder="http://...">
+			  <span class="input-group-btn">
+				<button id="addarticle-btn" class="btn btn-default" type="button">保存</button>
+			  </span>
+			</div>
+			</div>
+		  </form>
+		</div>
 		{% block scripts %}
 		<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/jquery.form.js') }}"></script>
@@ -119,7 +130,6 @@
 		{{ moment.lang("zh-CN") }}
 		{% endblock %}
 		<!-- Custom -->
-		
 		{% block extra_js %}{% endblock %}
 	</body>
 </html>
