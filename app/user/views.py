@@ -9,7 +9,7 @@ from app import app, db
 from . import user
 from .forms import BookmarkForm
 from ..models import User, Bookmark, Permission
-import url_resolve
+from ..util import url_resolve
 
 @user.route('/')
 @login_required

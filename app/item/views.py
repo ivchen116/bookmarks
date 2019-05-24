@@ -7,7 +7,7 @@ from datetime import datetime
 from app import app, db
 from . import item
 from ..models import User, Bookmark
-
+from ..util import url_resolve
 
 @item.route('/add', methods=['GET', 'POST'])
 @login_required
@@ -38,6 +38,8 @@ def add():
 		
 	db.session.add(bookmark)
 	db.session.commit()
+	
+	url_resolve.update_link(app, bookmark)
 		
 	return jsonify({
 		'status': 1
@@ -67,6 +69,9 @@ def delete():
 	bookmark.disabled = True
 	db.session.add(bookmark)
 	db.session.commit()
+	
+	#resolve title/url
+	url_resolve.update_link(app, bookmark)
 	
 	return jsonify({
 		'status': 1
