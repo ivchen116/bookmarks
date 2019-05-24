@@ -13,13 +13,18 @@ from ..models import User, Bookmark
 @login_required
 def add():
 	if request.method == 'POST':
-		url = request.form['url']
-		title = request.form['title']
+		url = request.form.get('url')
+		title = request.form.get('name')
 	else:
 		url = request.args.get('url')
 		title = request.args.get('title')
 	
 	if url is None:
+		return jsonify({
+			'status': 0
+		})
+	up = urlparse(url)
+	if up.scheme not in ['http', 'https'] or up.netloc is None:
 		return jsonify({
 			'status': 0
 		})
@@ -29,7 +34,7 @@ def add():
 		bookmark.time_updated = datetime.utcnow()
 	else:
 		bookmark = Bookmark(author=current_user, given_url=url, 
-					given_title=title, netloc = urlparse(url).netloc)
+					given_title = title, netloc = up.netloc)
 		
 	db.session.add(bookmark)
 	db.session.commit()
@@ -42,7 +47,7 @@ def add():
 @login_required
 def delete():
 	if request.method == 'POST':
-		itemid = request.form['id']
+		itemid = request.form.get('id')
 	else:
 		itemid = request.args.get('id')
 		url = request.args.get('url')
@@ -71,8 +76,8 @@ def delete():
 @login_required
 def archive():
 	if request.method == 'POST':
-		itemid = request.form['id']
-		done = request.form['done']
+		itemid = request.form.get('id')
+		done = request.form.get('done')
 	else:
 		itemid = request.args.get('id')
 		done = request.args.get('done')
@@ -112,9 +117,9 @@ def archive():
 @login_required
 def get():
 	if request.method == 'POST':
-		offset = request.form['offset']
-		count = request.form['count']
-		state = request.form['state']
+		offset = request.form.get('offset')
+		count = request.form.get('count')
+		state = request.form.get('state')
 	else:
 		offset = request.args.get('offset')
 		count = request.args.get('count')

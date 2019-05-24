@@ -36,7 +36,7 @@
 					<ul class="nav navbar-nav navbar-right">
 						{% if current_user.is_authenticated %}
 						<li>
-							<a href="#" id="addarticle-menu" data-toggle="popover">
+							<a id="addarticle-menu" role="button" data-toggle="popover">
 								<span class="glyphicon glyphicon-pencil"></span> 发布
 							</a>
 						</li>
@@ -111,9 +111,9 @@
 		  <form class="form-inline" role="form">
 			<div class="form-group"> 
 			  <div class="input-group">
-			  <input id="addarticle-url" type="text" class="form-control" placeholder="http://...">
+			  <input type="text" class="form-control url" placeholder="http://...">
 			  <span class="input-group-btn">
-				<button id="addarticle-btn" class="btn btn-default" type="button">保存</button>
+				<button class="btn btn-default save" type="button">保存</button>
 			  </span>
 			</div>
 			</div>
@@ -126,8 +126,6 @@
 		<script src="{{ url_for('static', filename='js/util.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap-confirmation.min.js') }}"></script>
 		
-		{{ moment.include_moment() }}
-		{{ moment.lang("zh-CN") }}
 		{% endblock %}
 		<!-- Custom -->
 		{% block extra_js %}{% endblock %}
