@@ -34,7 +34,7 @@ def async_update_link(app, bookmark):
 				bookmark.resolved_url = r.url
 				html_parser = HTMLParser.HTMLParser()
 				bookmark.resolved_title = html_parser.unescape(title)
-				db.session.add(bookmark)
+				db.session.merge(bookmark)
 				db.session.commit()
 			else:
 				print 'title not exist'
