@@ -511,6 +511,32 @@ body{
 }
 }
 
+.action_mark a {
+	background-position:-228px -487px;
+	height:14px;
+	width:17px
+}
+.page-queuedark .action_mark a {
+	background-position:-456px -487px
+}
+.item .action_mark a {
+	margin-left:7px
+}
+.touch .action_mark a {
+	background-position:-70px -225px;
+	height:20px;
+	width:23px
+}
+.touch .page-queuedark .action_mark a {
+	background-position:-133px -225px
+}
+.no-touch .action_mark a:hover {
+	background-position:-171px -487px
+}
+.no-touch .page-queuedark .action_mark a:hover {
+	background-position:-399px -487px
+}
+
 .action_delete a {
 	background-position:-642px -273px;
 	height:15px;

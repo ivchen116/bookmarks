@@ -45,14 +45,6 @@
 								{{ current_user.username }} <span class="caret"></span>
 							</a>
 							<ul class="dropdown-menu">
-								<li>
-									<a href="{{ url_for('user.users', username=current_user.username) }}">
-										<span class="glyphicon glyphicon-user"></span> 个人中心</a>
-								</li>
-								<li>
-									<a href="{{ url_for('auth.login') }}">
-										<span class="glyphicon glyphicon-refresh"></span> 微信号</a>
-								</li>
 								{% if current_user.operation(Permission.ADMINISTER) %}
 								<li class="divider">
 								</li>
@@ -125,7 +117,7 @@
 		<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/util.js') }}"></script>
 		<script src="{{ url_for('static', filename='js/bootstrap-confirmation.min.js') }}"></script>
-		
+		<script src="{{ url_for('static', filename='js/global.js') }}"></script>
 		{% endblock %}
 		<!-- Custom -->
 		{% block extra_js %}{% endblock %}

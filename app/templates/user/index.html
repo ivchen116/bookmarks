@@ -3,15 +3,17 @@
 {% block content %}
 	<div class="subnav">
 		<div class="btn-group " role="group" aria-label="...">
-
 		  <div class="btn-group" role="group">
-			<button type="button" class="btn btn-primary">在读</button>
+			<a type="button" {% if table=='queue' %} class="btn btn-primary" {% else %} class="btn btn-default" {% endif %} href="{{ url_for('user.index') }}">在读</a>
 		  </div>
 		  <div class="btn-group" role="group">
-			<button type="button" class="btn btn-default">已读</button>
+			<a type="button" {% if table=='archive' %} class="btn btn-primary" {% else %} class="btn btn-default" {% endif %} href="{{ url_for('user.archive') }}">已读</a>
 		  </div>
 		  <div class="btn-group" role="group">
-			<button type="button" class="btn btn-default">收藏列表</button>
+			<a type="button" {% if table=='favorite' %} class="btn btn-primary" {% else %} class="btn btn-default" {% endif %} href="{{ url_for('user.favorite') }}">精华</a>
+		  </div>
+		  <div class="btn-group" role="group">
+			<a type="button" {% if table=='tags' %} class="btn btn-primary" {% else %} class="btn btn-default" {% endif %} href="{{ url_for('user.tags') }}">标签</a>
 		  </div>
 		</div>
 	</div>
@@ -30,4 +32,8 @@
 
 {% block extra_js %}
 <script src="{{ url_for('static', filename='js/item.js') }}"></script>
+<script>
+itemLoadPara('{{table}}', '');
+itemLoadMore();
+</script>
 {% endblock %}
