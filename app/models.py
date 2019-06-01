@@ -104,6 +104,7 @@ class Bookmark(db.Model):
 	given_title = db.Column(db.String(256))
 	disabled = db.Column(db.Boolean, default=False)
 	archived = db.Column(db.Boolean, default=False)
+	favorite = db.Column(db.Boolean, default=False)
 	
 	image_url = db.Column(db.String(256))
 	resolved_url = db.Column(db.String(256), index=True)
@@ -126,7 +127,8 @@ class Bookmark(db.Model):
 			'author': self.author.username,
 			'time_added': int(time.mktime(self.time_added.timetuple())),
 			'time_updated': int(time.mktime(self.time_updated.timetuple())),
-			'archived': self.archived
+			'archived': self.archived,
+			'favorite': self.favorite
 		}
 
 		return data

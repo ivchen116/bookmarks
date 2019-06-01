@@ -32,9 +32,9 @@ function itemBuildNew(item) {
 					.attr('title', '标记为未读'));
 	} else {
 		$buttons.append(
-			$('<li><a href="#">完成</a></li>')
+			$('<li><a href="#">已读</a></li>')
 				.addClass('action_mark')
-				.attr('title', '完成'));
+				.attr('title', '已读'));
 	}
 	$buttons.append(
 			$('<li><a href="#" data-toggle="delete-confirmation">删除</a></li>')
@@ -46,7 +46,7 @@ function itemBuildNew(item) {
 				.attr('title', '添加收藏夹'));
 	$buttons.append(
 			$('<li><a href="#">标记为精华</a></li>')
-				.addClass('action_favorite')
+				.addClass(item.favorite?'action_favorite selected':'action_favorite')
 				.attr('title', '标记为精华'));
 
 	return $item;
@@ -100,6 +100,32 @@ $(document).ready(function(){
 			success: function(data) {
 				if (data.status == '1') {
 					$(this).remove();
+				}
+			}, 
+			error: function() {        
+				
+			}
+		});	
+		
+		e.preventDefault();
+	});
+	
+	$('.page_queue_list').on('click', '.action_favorite a', function(e){
+		var item = $(this).closest('.item')
+		var favorite = $(this).parent('.selected').length>0?0:1;
+		
+		$.ajax({    
+			url: "/item/favorite",    
+			dataType: "json", 
+			data: { id: item.attr("id"), favorite: favorite },        
+			type: "POST",    
+			context: item,
+			success: function(data) {
+				if (data.status == '1') {
+					$(this).find('.action_favorite').toggleClass('selected');
+					if (items_load_fiter == 'favorite' && !$(this).find('.action_favorite').hasClass('selected')) {
+						$(this).remove();
+					}
 				}
 			}, 
 			error: function() {        

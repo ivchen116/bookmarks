@@ -118,6 +118,47 @@ def archive():
 		'status': 1
 	})
 	
+@item.route('/favorite', methods=['GET', 'POST'])
+@login_required
+def favorite():
+	if request.method == 'POST':
+		itemid = request.form.get('id')
+		mark = request.form.get('favorite')
+	else:
+		itemid = request.args.get('id')
+		mark = request.args.get('favorite')
+
+	if itemid is None or mark is None:
+		return jsonify({
+			'status': 0
+		})
+	
+	favorite = True
+	if mark == '0':
+		favorite = False
+	elif mark == '1':
+		favorite = True
+	else:
+		return jsonify({
+			'status': 0
+		})
+	
+	bookmark = Bookmark.query.get(itemid)
+	
+	if bookmark is None or current_user != bookmark.author or bookmark.disabled:
+		return jsonify({
+			'status': 0
+		})
+	
+	if favorite != bookmark.favorite:
+		bookmark.favorite = favorite
+		db.session.add(bookmark)
+		db.session.commit()
+	
+	return jsonify({
+		'status': 1
+	})
+	
 @item.route('/get', methods=['GET', 'POST'])
 @login_required
 def get():
@@ -140,17 +181,21 @@ def get():
 			'status': 0
 		})
 	
-	archived = True
+	param = []
+	param.append(Bookmark.disabled == False)
+
 	if state == 'queue':
-		archived = False
+		param.append(Bookmark.archived == False)
 	elif state == 'archive':
-		archived = True
+		param.append(Bookmark.archived == True)
+	elif state == 'favorite':
+		param.append(Bookmark.favorite == True)
 	else:
 		return jsonify({
 			'status': 0
 		})
 	
-	bookmarks = current_user.bookmarks.filter_by(disabled=False, archived=archived).order_by(
+	bookmarks = current_user.bookmarks.filter(*param).order_by(
 				Bookmark.time_updated.desc()).limit(count).offset(offset)
 
 	data = {
