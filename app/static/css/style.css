@@ -537,6 +537,24 @@ body{
 	background-position:-399px -487px
 }
 
+.action_mark_archived a {
+	background-position:-698px 3px;
+	height:14px;
+	width:14px
+}
+.page-queuedark .action_mark_archived a {
+	background-position:-698px -321px
+}
+.item .action_mark_archived a {
+	margin-left:6px
+}
+.no-touch .action_mark_archived a:hover {
+	background-position:-698px -51px
+}
+.no-touch .page-queuedark .action_mark_archived a:hover {
+	background-position:-698px -105px
+}
+
 .action_delete a {
 	background-position:-642px -273px;
 	height:15px;
