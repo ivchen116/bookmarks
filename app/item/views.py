@@ -32,10 +32,12 @@ def add():
 	bookmark = current_user.bookmarks.filter_by(given_url=url).first()
 	if bookmark:
 		bookmark.time_updated = datetime.utcnow()
+		bookmark.archived = False
+		bookmark.disabled = False
 	else:
 		bookmark = Bookmark(author=current_user, given_url=url, 
 					given_title = title, netloc = up.netloc)
-		
+	
 	db.session.add(bookmark)
 	db.session.commit()
 	
